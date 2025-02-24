@@ -17,11 +17,11 @@ Features
 ---
 
 Tech Stack  
-Frontend: HTML, CSS, JavaScript  
-Backend: Node.js, Express.js  
-Database: MongoDB  
-UI Enhancements: Bootstrap & TailwindCSS  
-Authentication: JWT (JSON Web Tokens)  
+- Frontend: HTML, CSS, JavaScript  
+- Backend: Node.js, Express.js  
+- Database: MongoDB  
+- UI Enhancements: Bootstrap & TailwindCSS  
+- Authentication: JWT (JSON Web Tokens)  
 
 ---
 
