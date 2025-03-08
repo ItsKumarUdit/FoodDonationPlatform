@@ -37,6 +37,7 @@ if (donationList) {
     updateDonationList();
 }
 
+
 function updateDonationList() {
     donationList.innerHTML = "";
 
@@ -160,4 +161,81 @@ function deleteFoodRequest(index) {
     // Update the food request list on the page
     updateFoodRequestList();
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const searchButton = document.getElementById("searchButton");
+    const searchInput = document.getElementById("locationSearch");
+    const donationList = document.getElementById("donationList");
+
+    function updateDonationList(donationsToShow) {
+        donationList.innerHTML = "";
+        
+        if (donationsToShow.length > 0) {
+            donationsToShow.forEach((donation, index) => {
+                const donationItem = document.createElement("div");
+                donationItem.classList.add("donation-item");
+                const isExpired = new Date(donation.expiryDate) < new Date();
+                donationItem.innerHTML = `
+                    <h3>Donor: ${donation.name}</h3>
+                    <p>Email: ${donation.email}</p>
+                    <p>Mobile: ${donation.mobile}</p>
+                    <p>Food Details: ${donation.foodDetails}</p>
+                    <p>Location: <a href="https://www.google.com/maps/search/${encodeURIComponent(donation.location)}" target="_blank">${donation.location}</a></p>
+                    <p>Expiry Date: ${donation.expiryDate}</p>
+                    <p class="${isExpired ? 'expired' : ''}">${isExpired ? 'Expired' : ''}</p>
+                    <button onclick="receiveFood(this)">Receive Food</button>
+                    <button onclick="deleteDonation(${index})">Remove</button>
+                `;
+                donationList.appendChild(donationItem);
+            });
+        } else {
+            donationList.innerHTML = "<p style='color: red;'>Food in your area isn't available.</p>";
+        }
+    }
+
+    let donations = JSON.parse(localStorage.getItem("donations")) || [];
+    updateDonationList(donations);
+
+    if (searchButton) {
+        searchButton.addEventListener("click", function () {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            if (searchValue === "") {
+                updateDonationList(donations);
+                return;
+            }
+
+            const filteredDonations = donations.filter(donation => 
+                donation.location.toLowerCase() === searchValue
+            );
+
+            updateDonationList(filteredDonations);
+        });
+    }
+
+    searchInput.addEventListener("input", function () {
+        if (searchInput.value.trim() === "") {
+            updateDonationList(donations);
+        }
+    });
+});
+
+function receiveFood(button) {
+    button.innerText = "Food Received";
+    button.style.backgroundColor = "#4CAF50";
+    button.disabled = true;
+}
+
+function deleteDonation(index) {
+    let donations = JSON.parse(localStorage.getItem("donations")) || [];
+    donations.splice(index, 1);
+    localStorage.setItem("donations", JSON.stringify(donations));
+    location.reload();
+}
+document.addEventListener("click", function (event) {
+    const sidebar = document.getElementById("sidebar");
+    const hamburger = document.querySelector(".hamburger");
+    if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+        sidebar.style.left = "-250px";
+    }
+});
+
 
