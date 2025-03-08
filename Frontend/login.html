@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,9 +50,10 @@
             alert(data.message);
 
             if (mode === 'login' && data.token) {
-                localStorage.setItem('token', data.token);
-                window.location.href = 'index.html';
-            } else if (mode === 'signup') {
+                   localStorage.setItem('user', JSON.stringify({ name, mobile, role })); // Store user details
+                    window.location.href = 'index.html';
+         }
+           else if (mode === 'signup') {
                 toggleMode();
             }
         }
@@ -67,6 +68,7 @@
             <select id="role" class="w-full p-3 border rounded-lg mb-4" required>
                 <option value="donor">Donor</option>
                 <option value="requester">Requester</option>
+                <option value="requester">NGO's Head</option>
             </select>
             <label for="name" class="block text-gray-700 mb-2">Name</label>
             <input type="text" id="name" class="w-full p-3 border rounded-lg mb-4" required>
