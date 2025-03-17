@@ -1,3 +1,4 @@
+// Donation handling (unchanged from original)
 const donationForm = document.getElementById("donationForm");
 const donationList = document.getElementById("donationList");
 
@@ -9,26 +10,15 @@ if (donationForm) {
 
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
-        const mobile = document.getElementById("mobile").value; // Get mobile number
+        const mobile = document.getElementById("mobile").value;
         const foodDetails = document.getElementById("foodDetails").value;
-        const expiryDate = document.getElementById("expiryDate").value; 
+        const expiryDate = document.getElementById("expiryDate").value;
         const location = document.getElementById("location").value;
 
-        const donation = {
-            name,
-            email,
-            mobile,  
-            foodDetails,
-            location,
-            expiryDate,
-        };
-
+        const donation = { name, email, mobile, foodDetails, location, expiryDate };
         donations.push(donation);
-
         localStorage.setItem("donations", JSON.stringify(donations));
-
         donationForm.reset();
-
         window.location.href = "donations.html";
     });
 }
@@ -37,10 +27,8 @@ if (donationList) {
     updateDonationList();
 }
 
-
 function updateDonationList() {
     donationList.innerHTML = "";
-
     donations.forEach((donation, index) => {
         const donationItem = document.createElement("div");
         donationItem.classList.add("donation-item");
@@ -48,11 +36,11 @@ function updateDonationList() {
         donationItem.innerHTML = `
             <h3>Donor: ${donation.name}</h3>
             <p>Email: ${donation.email}</p>
-            <p>Mobile: ${donation.mobile}</p> <!-- Display mobile number -->
+            <p>Mobile: ${donation.mobile}</p>
             <p>Food Details: ${donation.foodDetails}</p>
             <p>Location: <a href="https://www.google.com/maps/search/${encodeURIComponent(donation.location)}" target="_blank">${donation.location}</a></p>
             <p>Expiry Date: ${donation.expiryDate}</p>
-            <p class="${isExpired ? 'expired' : ''}">${isExpired ? 'Expired' : ''}</p> <!-- Show 'Expired' text if donation is expired -->
+            <p class="${isExpired ? 'expired' : ''}">${isExpired ? 'Expired' : ''}</p>
             <button onclick="receiveFood(this)">Receive Food</button>
             <button onclick="deleteDonation(${index})">Remove</button>
         `;
@@ -60,13 +48,9 @@ function updateDonationList() {
     });
 }
 
-// Function to handle "Receive Food" button click without the popup
 function receiveFood(button) {
-    // Change the button text and background color
     button.innerText = "Food Received";
-    button.style.backgroundColor = "#4CAF50"; // Green color
-
-    // Optionally, disable the button to prevent further clicks
+    button.style.backgroundColor = "#4CAF50";
     button.disabled = true;
 }
 
@@ -76,126 +60,160 @@ function deleteDonation(index) {
     updateDonationList();
 }
 
-// Grab the request form and the request list container
+// Food Request handling (updated to use MongoDB)
 const requestFoodForm = document.getElementById("requestFoodForm");
 const foodRequestList = document.getElementById("foodRequestList");
 
-// Get existing food requests from localStorage or initialize as an empty array
-let foodRequests = JSON.parse(localStorage.getItem("foodRequests")) || [];
-
-// Add event listener for the food request form submission (Need_Food.html)
 if (requestFoodForm) {
-    requestFoodForm.addEventListener("submit", function (event) {
+    requestFoodForm.removeEventListener("submit", handleFormSubmit);
+    requestFoodForm.addEventListener("submit", handleFormSubmit);
+
+    function handleFormSubmit(event) {
         event.preventDefault();
 
-        // Get values from the form
         const requestorName = document.getElementById("requestorName").value;
         const requestorMobile = document.getElementById("requestorMobile").value;
         const requestorLocation = document.getElementById("requestorLocation").value;
 
-        // Create a food request object
-        const foodRequest = {
-            requestorName,
-            requestorMobile,
-            requestorLocation
-        };
+        const requestData = { requestorName, requestorMobile, requestorLocation };
 
-        // Push the new food request into the foodRequests array
-        foodRequests.push(foodRequest);
-
-        // Save the updated food requests array to localStorage
-        localStorage.setItem("foodRequests", JSON.stringify(foodRequests));
-
-        // Reset the form
-        requestFoodForm.reset();
-
-        // Redirect to the "Food Request" page after submission
-        window.location.href = "Food_Request.html";  // Make sure this path is correct
-    });
+        fetch("http://localhost:5000/api/request-food", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.message === "Food request submitted successfully!") {
+                requestFoodForm.reset();
+                window.location.href = "Food_Request.html";
+            } else {
+                alert(result.message || "Failed to submit request.");
+            }
+        })
+        .catch(error => {
+            console.error("Error submitting request:", error);
+            alert("Error submitting request. Please try again later.");
+        });
+    }
 }
 
-// If foodRequestList exists, update it on page load (Food_Request.html)
+let foodRequests = []; // Global array to store fetched food requests
+
 if (foodRequestList) {
-    updateFoodRequestList();
+    fetchAndUpdateFoodRequests(); // Initial fetch and update
 }
 
-// Function to update the food request list on the "Food_Request.html" page
-function updateFoodRequestList() {
-    // Clear the food request list before adding new ones
+async function updateFoodRequestList(requestArray = foodRequests) {
     foodRequestList.innerHTML = "";
-
-    foodRequests.forEach((foodRequest, index) => {
+    if (requestArray.length === 0) {
+        foodRequestList.innerHTML = "<p>No food requests found.</p>";
+        return;
+    }
+    requestArray.forEach((foodRequest, index) => {
         const requestItem = document.createElement("div");
-        requestItem.classList.add("food-request-item");
-
+        requestItem.classList.add("food-request-item"); // Keep original styling
         requestItem.innerHTML = `
             <h3>Requestor: ${foodRequest.requestorName}</h3>
             <p>Mobile: ${foodRequest.requestorMobile}</p>
             <p>Location: <a href="https://www.google.com/maps/search/${encodeURIComponent(foodRequest.requestorLocation)}" target="_blank">${foodRequest.requestorLocation}</a></p>
-            <button onclick="acceptRequest(${index})">Accept Request</button>
-            <button onclick="deleteFoodRequest(${index})">Remove</button>
+            <button onclick="acceptRequest('${foodRequest._id}')">Accept Request</button>
+            <button onclick="deleteFoodRequest('${foodRequest._id}')">Remove</button>
         `;
         foodRequestList.appendChild(requestItem);
     });
 }
 
-// Function to handle "Accept Request" button click
-function acceptRequest(index) {
-    const request = foodRequests[index];
+async function fetchAndUpdateFoodRequests() {
+    try {
+        const response = await fetch("http://localhost:5000/api/food-requests", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
 
-    // You can implement your logic here for accepting a food request
-    alert(`Request from ${request.requestorName} has been accepted!`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch requests");
+        }
 
-    // Optionally, disable the button to prevent further clicks
-    document.querySelectorAll("button")[index].disabled = true;
+        foodRequests = await response.json(); // Store globally
+        updateFoodRequestList(foodRequests); // Update with full list initially
+    } catch (error) {
+        console.error("Error fetching requests:", error);
+        foodRequestList.innerHTML = "<p>Error loading requests. Please try again later.</p>";
+    }
 }
 
-// Function to delete a food request
-function deleteFoodRequest(index) {
-    // Remove the food request from the foodRequests array
-    foodRequests.splice(index, 1);
+async function acceptRequest(id) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/food-requests/${id}/accept`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+        });
 
-    // Save the updated food requests array back to localStorage
-    localStorage.setItem("foodRequests", JSON.stringify(foodRequests));
-
-    // Update the food request list on the page
-    updateFoodRequestList();
+        if (response.ok) {
+            alert("Request accepted!");
+            fetchAndUpdateFoodRequests(); // Refresh the list
+        } else {
+            alert("Failed to accept request.");
+        }
+    } catch (error) {
+        console.error("Error accepting request:", error);
+        alert("Error accepting request.");
+    }
 }
+
+async function deleteFoodRequest(id) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/food-requests/${id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+            fetchAndUpdateFoodRequests(); // Refresh the list
+        } else {
+            alert("Failed to delete request.");
+        }
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        alert("Error deleting request.");
+    }
+}
+
+// Search functionality (unchanged for donations, added for food requests)
 document.addEventListener("DOMContentLoaded", function () {
     const searchButton = document.getElementById("searchButton");
     const searchInput = document.getElementById("locationSearch");
     const donationList = document.getElementById("donationList");
 
-    function updateDonationList(donationsToShow) {
+    // Modify updateDonationList to accept an optional parameter (unchanged)
+    function updateDonationList(donationArray = donations) {
         donationList.innerHTML = "";
-        
-        if (donationsToShow.length > 0) {
-            donationsToShow.forEach((donation, index) => {
-                const donationItem = document.createElement("div");
-                donationItem.classList.add("donation-item");
-                const isExpired = new Date(donation.expiryDate) < new Date();
-                donationItem.innerHTML = `
-                    <h3>Donor: ${donation.name}</h3>
-                    <p>Email: ${donation.email}</p>
-                    <p>Mobile: ${donation.mobile}</p>
-                    <p>Food Details: ${donation.foodDetails}</p>
-                    <p>Location: <a href="https://www.google.com/maps/search/${encodeURIComponent(donation.location)}" target="_blank">${donation.location}</a></p>
-                    <p>Expiry Date: ${donation.expiryDate}</p>
-                    <p class="${isExpired ? 'expired' : ''}">${isExpired ? 'Expired' : ''}</p>
-                    <button onclick="receiveFood(this)">Receive Food</button>
-                    <button onclick="deleteDonation(${index})">Remove</button>
-                `;
-                donationList.appendChild(donationItem);
-            });
-        } else {
-            donationList.innerHTML = "<p style='color: red;'>Food in your area isn't available.</p>";
+        if (donationArray.length === 0) {
+            donationList.innerHTML = "<p>No donations found for this location.</p>";
+            return;
         }
+        donationArray.forEach((donation, index) => {
+            const donationItem = document.createElement("div");
+            donationItem.classList.add("donation-item");
+            const isExpired = new Date(donation.expiryDate) < new Date();
+            donationItem.innerHTML = `
+                <h3>Donor: ${donation.name}</h3>
+                <p>Email: ${donation.email}</p>
+                <p>Mobile: ${donation.mobile}</p>
+                <p>Food Details: ${donation.foodDetails}</p>
+                <p>Location: <a href="https://www.google.com/maps/search/${encodeURIComponent(donation.location)}" target="_blank">${donation.location}</a></p>
+                <p>Expiry Date: ${donation.expiryDate}</p>
+                <p class="${isExpired ? 'expired' : ''}">${isExpired ? 'Expired' : ''}</p>
+                <button onclick="receiveFood(this)">Receive Food</button>
+                <button onclick="deleteDonation(${index})">Remove</button>
+            `;
+            donationList.appendChild(donationItem);
+        });
     }
 
-    let donations = JSON.parse(localStorage.getItem("donations")) || [];
-    updateDonationList(donations);
-
-    if (searchButton) {
+    // Donation search (unchanged)
+    if (searchButton && searchInput && donationList) {
         searchButton.addEventListener("click", function () {
             const searchValue = searchInput.value.trim().toLowerCase();
             if (searchValue === "") {
@@ -203,39 +221,66 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const filteredDonations = donations.filter(donation => 
-                donation.location.toLowerCase() === searchValue
+            const filteredDonations = donations.filter(donation =>
+                donation.location.toLowerCase().includes(searchValue)
             );
-
             updateDonationList(filteredDonations);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            if (searchValue === "") {
+                updateDonationList(donations);
+            } else {
+                const filteredDonations = donations.filter(donation =>
+                    donation.location.toLowerCase().includes(searchValue)
+                );
+                updateDonationList(filteredDonations);
+            }
         });
     }
 
-    searchInput.addEventListener("input", function () {
-        if (searchInput.value.trim() === "") {
-            updateDonationList(donations);
-        }
-    });
-});
+    // Initial load of all donations (unchanged)
+    if (donationList) {
+        updateDonationList();
+    }
 
-function receiveFood(button) {
-    button.innerText = "Food Received";
-    button.style.backgroundColor = "#4CAF50";
-    button.disabled = true;
-}
+    // Food Request search (new)
+    if (foodRequestList) {
+        fetchAndUpdateFoodRequests(); // Initial fetch
 
-function deleteDonation(index) {
-    let donations = JSON.parse(localStorage.getItem("donations")) || [];
-    donations.splice(index, 1);
-    localStorage.setItem("donations", JSON.stringify(donations));
-    location.reload();
-}
-document.addEventListener("click", function (event) {
-    const sidebar = document.getElementById("sidebar");
-    const hamburger = document.querySelector(".hamburger");
-    if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
-        sidebar.style.left = "-250px";
+        searchButton.addEventListener("click", function () {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            if (searchValue === "") {
+                updateFoodRequestList(foodRequests);
+                return;
+            }
+
+            const filteredRequests = foodRequests.filter(request =>
+                request.requestorLocation.toLowerCase().includes(searchValue)
+            );
+            updateFoodRequestList(filteredRequests);
+        });
+
+        searchInput.addEventListener("input", function () {
+            const searchValue = searchInput.value.trim().toLowerCase();
+            if (searchValue === "") {
+                updateFoodRequestList(foodRequests);
+            } else {
+                const filteredRequests = foodRequests.filter(request =>
+                    request.requestorLocation.toLowerCase().includes(searchValue)
+                );
+                updateFoodRequestList(filteredRequests);
+            }
+        });
     }
 });
 
-
+// Sidebar click-outside handler (unchanged from original)
+document.addEventListener("click", function (event) {
+    const sidebar = document.getElementById("sidebar");
+    const hamburger = document.querySelector(".hamburger");
+    if (sidebar && hamburger && !sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+        sidebar.style.left = "-250px";
+    }
+});
