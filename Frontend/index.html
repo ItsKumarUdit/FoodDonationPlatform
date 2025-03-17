@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="FSD_CSS.css">
 
     <style>
+        
         body {
             margin: 0;
             padding: 0;
@@ -175,6 +176,22 @@
         .logout-button:hover, .back-button:hover {
             background-color: #e53935;
         }
+        .back-button {
+            margin-top: 15px;
+            display: block;
+            width: fit-content;
+            padding: 10px 15px;
+            background: #444;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .back-button:hover {
+            background: #222;
+        }
 
         /* Animation for Fade In */
         @keyframes fadeIn {
@@ -214,6 +231,54 @@ nav a:hover::before {
     opacity: 1;
     transform: scale(1);
 }
+/* Background Image for #home Section Only */
+#home {
+    position: relative;
+    background: url('Home.jpg') no-repeat center center;
+    background-size: cover;
+    color: white; /* Ensures text is readable */
+    padding: 50px 20px; /* Adds spacing inside the section */
+    border-radius: 10px; /* Optional: for smooth edges */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Optional: Add a semi-transparent overlay for better contrast */
+#home::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Adjust transparency */
+    border-radius: 10px;
+    z-index: 0;
+}
+
+/* Ensures content is above the overlay */
+#home * {
+    position: relative;
+    z-index: 1;
+}
+.profile-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+    animation: fadeIn 0.4s ease-in-out;
+    z-index: 1000; /* Add this */
+}
+ 
+
 
 
     </style>
@@ -221,6 +286,7 @@ nav a:hover::before {
 </head>
 
 <body>
+    
     
     <!-- Login/Signup Button on Top-Right -->
     <a href="login.html" id="login-button" class="login-button" style="background-color:#f44336; cursor: pointer;">Login / Sign Up</a>
@@ -231,7 +297,10 @@ nav a:hover::before {
     </div>
         
     <header>
-        <h1>Community Food Donation Platform</h1>
+        <div class="header-content">
+            <img src="logo.png" alt="MealMitra Logo" class="logo"> <!-- Add your logo file here -->
+            <h1 style="font-size: 46px;">MealMitra - Food Donation Platform</h1>
+        </div>
         <nav>
             <a href="index.html">Home</a>
             <a href="donate.html">Donate</a>
@@ -243,10 +312,10 @@ nav a:hover::before {
             <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
 
     <div class="sidebar" id="sidebar">
+        <a href="#">Your Activities</a>
         <a href="#">Setting</a>
-        <a href="#">Contact Us</a>
         <a href="complaint.html">Report Issue</a>
-         
+        <a href="FAQ.html">FAQ</a>
     </div>
 
     <div class="content" id="main-content">
@@ -259,6 +328,7 @@ nav a:hover::before {
             sidebar.style.left = sidebar.style.left === "0px" ? "-250px" : "0px";
         }
     </script>
+    
         </nav>
     </header>
 
