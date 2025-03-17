@@ -64,4 +64,11 @@ body {
 .content.shifted {
     margin-left: 250px;
 }
+.sidebar {
+    z-index: 100;
+}
+.sidebar {
+    pointer-events: auto; /* Allows clicks */
+}
+
  
