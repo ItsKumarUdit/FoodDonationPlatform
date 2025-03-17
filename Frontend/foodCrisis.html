@@ -5,122 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Starvation and Hunger - Community Food Donation Platform</title>
     <link rel="stylesheet" href="SideBar.css">
-
     <link rel="stylesheet" href="FSD_CSS.css">
     <style>
-        /* Google Font for a modern look */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-body {
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px;
-}
-
-/* Main container */
-.container {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Headings */
-h1, h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #2c3e50;
-}
-
-/* Content cards */
-.content-card {
-    background: white;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.content-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Image container */
-.image-container {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.image-container img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-}
-
-.image-container img:hover {
-    transform: scale(1.05);
-}
-
-/* Paragraphs */
-p {
-    text-align: justify;
-    font-size: 1rem;
-    color: #555;
-}
-
-        header{
-            background-color:deepskyblue;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('Hunger.png') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            position: relative;
+            line-height: 1.6;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+        }
+        body * {
+            position: relative;
+        }
+        header {
+            background-color: deepskyblue;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav a {
+            position: relative;
+            display: inline-block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        nav a::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #ffffff;
+            opacity: 0;
+            transform: scale(1.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        nav a:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            left: 25px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            z-index: 1001;
+            pointer-events: auto;
         }
         .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
             padding: 20px;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
-            color: #444;
+            margin-bottom: 15px;
+            color: #2c3e50;
         }
-        h2 {
-            color: #666;
+        .content-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        p {
-            margin: 10px 0;
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
         }
         .image-container {
             text-align: center;
             margin: 20px 0;
         }
         .image-container img {
-            width: 100%;
-            max-width: 600px;
+            max-width: 100%;
             height: auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+        p {
+            text-align: justify;
+            font-size: 1rem;
+            color: #555;
+            margin: 10px 0;
         }
         footer {
             text-align: center;
@@ -129,8 +131,6 @@ p {
             color: #fff;
             margin-top: 20px;
         }
-
-        /* Login Button on Top-Right */
         .login-button {
             position: fixed;
             top: 20px;
@@ -142,13 +142,41 @@ p {
             font-size: 1em;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            z-index: 1001; /* Ensure above overlay */
+            pointer-events: auto; /* Ensure clickable */
         }
-
         .login-button:hover {
             background-color: #45a049;
         }
-
-        /* Profile Popup */
+        #login-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            padding: 12px 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001; /* Ensure above overlay */
+            pointer-events: auto; /* Ensure clickable */
+        }
+        #login-button:hover {
+            transform: scale(1.1);
+            background: #2E7D32;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+        }
+        @media screen and (max-width: 600px) {
+            #login-button {
+                right: 10px;
+                top: 10px;
+                padding: 10px 15px;
+            }
+        }
         .profile-popup {
             display: none;
             position: fixed;
@@ -162,18 +190,16 @@ p {
             width: 350px;
             text-align: center;
             animation: fadeIn 0.4s ease-in-out;
+            z-index: 1000; /* Ensure above overlay */
         }
-
         .profile-popup.active {
             display: block;
         }
-
         .profile-info {
             font-size: 1.1em;
             margin-bottom: 20px;
             color: #333;
         }
-
         .logout-button, .back-button {
             background-color: #f44336;
             color: white;
@@ -186,12 +212,9 @@ p {
             font-size: 1.1em;
             transition: background-color 0.3s ease;
         }
-
         .logout-button:hover, .back-button:hover {
             background-color: #e53935;
         }
-
-        /* Animation for Fade In */
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -205,31 +228,29 @@ p {
     </style>
 </head>
 <body>
-    <!-- Login/Signup Button on Top-Right -->
     <a href="login.html" class="login-button" id="login-button" style="background-color: cyan;">Login / Sign Up</a>
 
     <header>
-        <h1>Community Food Donation Platform</h1>
+
+        <div class="header-content">
+            <img src="logo.png" alt="MealMitra Logo" class="logo"> <!-- Add your logo file here -->
+            <h1>MealMitra - Food Donation Platform</h1>
+        </div>
         <nav>
             <a href="index.html">Home</a>
-            <a href="donate.html">Donate </a>
+            <a href="donate.html">Donate</a>
             <a href="Need_Food.html">Need Food?</a>
             <a href="donations.html">View Donations</a>
             <a href="Food_Request.html">View Request</a>
             <a href="foodCrisis.html">Reason</a>
             <a href="team.html">Team Behind</a>
-            <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+            <div class="hamburger" onclick="toggleSidebar()">☰</div>
             <div class="sidebar" id="sidebar">
+                <a href="#">Your Activities</a>
                 <a href="#">Setting</a>
-                <a href="#">Contact Us</a>
                 <a href="complaint.html">Report Issue</a>
-                 
+                <a href="FAQ.html">FAQ</a>
             </div>
-        
-            <div class="content" id="main-content">
-                
-            </div>
-        
             <script>
                 function toggleSidebar() {
                     const sidebar = document.getElementById("sidebar");
@@ -274,118 +295,60 @@ p {
     </div>
 
     <footer>
-        &copy; 2025 Starvation Awareness Initiative
+        © 2025 Starvation Awareness Initiative
     </footer>
-    <style> 
-    
-        /* Modern Floating Look for Profile Button */
-    #login-button {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        padding: 12px 18px;
-        background: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 50px; /* Rounded button */
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* Hover effect - Slightly bigger & shadow effect */
-    #login-button:hover {
-        transform: scale(1.1); /* Makes it slightly bigger */
-        background: #2E7D32;
-        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-    }
-    
-    /* Mobile Responsive */
-    @media screen and (max-width: 600px) {
-        #login-button {
-            right: 10px;
-            top: 10px;
-            padding: 10px 15px;
-        }
-    }
-    nav a {
-    position: relative;
-    display: inline-block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    transition: all 0.3s ease;
-}
 
-nav a::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 2px solid #ffffff;
-    opacity: 0;
-    transform: scale(1.2);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-nav a:hover::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-        
-    </style>
-
-    <!-- Profile Popup -->
     <div class="profile-popup" id="profile-popup">
-        <div class="profile-info" id="profile-info">
-            <!-- User details will be shown here -->
-        </div>
+        <div class="profile-info" id="profile-info"></div>
         <button class="back-button" onclick="goBack()">Back</button>
         <button class="logout-button" onclick="logout()">Logout</button>
     </div>
 
     <script>
-        // Check if user is logged in
         const user = JSON.parse(localStorage.getItem('user'));
         const loginButton = document.getElementById('login-button');
         const profilePopup = document.getElementById('profile-popup');
         const profileInfo = document.getElementById('profile-info');
 
-        // If user is logged in, change Login button to Profile
+        console.log('User from localStorage:', user); // Debug user data
+
         if (user) {
-            loginButton.textContent = user.name;
+            loginButton.textContent = user.name || 'User'; // Fallback if name is missing
             loginButton.href = '#';
-            loginButton.onclick = () => showProfile();
-            profileInfo.textContent = `Name: ${user.name}, Mobile: ${user.mobile}, Role: ${user.role}`;
+            loginButton.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default <a> behavior
+                console.log('Login button clicked'); // Debug click
+                showProfile();
+            });
+            profileInfo.textContent = `Name: ${user.name || 'N/A'}, Mobile: ${user.mobile || 'N/A'}, Role: ${user.role || 'N/A'}`;
         } else {
-            loginButton.onclick = () => window.location.href = 'login.html';
+            loginButton.textContent = 'Login / Sign Up';
+            loginButton.href = 'login.html';
+            loginButton.addEventListener('click', function(e) {
+                console.log('Redirecting to login'); // Debug redirect
+            });
         }
 
-        // Show profile popup
         function showProfile() {
+            console.log('Showing profile popup'); // Debug popup
             profilePopup.classList.add('active');
         }
 
-        // Logout function
         function logout() {
-            // Clear user data from localStorage
+            console.log('Logging out'); // Debug logout
             localStorage.removeItem('user');
-            // Reset login button to Login/SignUp
             loginButton.textContent = 'Login / Sign Up';
             loginButton.href = 'login.html';
-            // Hide profile popup
+            loginButton.removeEventListener('click', showProfile); // Clean up
+            loginButton.addEventListener('click', function(e) {
+                console.log('Redirecting to login after logout'); // Debug redirect
+            });
             profilePopup.classList.remove('active');
         }
 
-        // Back button function
         function goBack() {
-            window.location.href = 'foodCrisis.html';
+            console.log('Going back'); // Debug back
+            profilePopup.classList.remove('active'); // Just hide popup
         }
     </script>
     <script src="FSD_JS.js"></script>
