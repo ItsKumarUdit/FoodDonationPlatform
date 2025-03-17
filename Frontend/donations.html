@@ -85,7 +85,10 @@
     <a href="login.html" class="login-button" id="login-button" style="background-color: cyan;">Login / Sign Up</a>
 
     <header>
-        <h1>Community Food Donation Platform</h1>
+        <div class="header-content">
+            <img src="logo.png" alt="MealMitra Logo" class="logo"> <!-- Add your logo file here -->
+            <h1>MealMitra - Food Donation Platform</h1>
+        </div>
         <nav>
             <a href="index.html">Home</a>
             <a href="donate.html">Donate</a>
@@ -96,14 +99,10 @@
             <a href="team.html">Team Behind</a>
             <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
             <div class="sidebar" id="sidebar">
+                <a href="#">Your Activities</a>
                 <a href="#">Setting</a>
-                <a href="#">Contact Us</a>
-                <a href="complaint.html">Report Issue</a>
-                 
-            </div>
-        
-            <div class="content" id="main-content">
-                
+                 <a href="complaint.html">Report Issue</a>
+                <a href="FAQ.html">FAQ</a>
             </div>
         
             <script>
@@ -113,15 +112,16 @@
                 }
             </script>
         </nav>
+         
+    </header>
+
+    <main>
         <div class="search-container">
             <input type="text" id="locationSearch" placeholder="Search donated food in your area">
             <button id="searchButton">🔍</button>
         </div>
         <div id="searchResults"></div>
 
-    </header>
-
-    <main>
         <section id="list">
             <h2 style="color: aliceblue;">Available Donations</h2>
             <div id="donationList" class="card-container">
@@ -195,6 +195,7 @@ nav a:hover::before {
     transform: scale(1);
 }
 
+
         
     </style>
 
@@ -244,6 +245,7 @@ nav a:hover::before {
         function goBack() {
             window.location.href = 'donations.html';
         }
+        
     </script>
 
     <script src="FSD_JS.js"></script>
